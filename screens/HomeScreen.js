@@ -154,9 +154,11 @@ export default class HomeScreen extends Component {
           </Text>
         </View>
 
-        <View style={styles.col}> 
+        <View style={styles.col}>
           <View style={styles.row}>
-            <Text>First</Text><Text>|</Text><Text>Math</Text>
+            <Text>First</Text>
+            <Text>|</Text>
+            <Text>Math</Text>
           </View>
         </View>
       </View>
@@ -173,9 +175,9 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row"
   },
   col: {
-    flexDirection: 'column',
+    flexDirection: "column"
   }
 });
