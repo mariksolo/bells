@@ -5,7 +5,8 @@ import {
   View,
   TextInput,
   Text,
-  AsyncStorage
+  AsyncStorage,
+  Button
 } from "react-native";
 import { ExpoLinksView } from "@expo/samples";
 import {
@@ -21,15 +22,24 @@ import {
 class Input extends Component {
   constructor(props) {
     super(props);
+    this.state = { text: "" };
   }
   render() {
     return (
-      <View>
-        <TextInput style={{ height: 40 }} placeholder={this.props.placeholder}>
-          {" "}
-          {this.props.prefill}
-        </TextInput>
-      </View>
+      <TextInput
+        style={{ height: 40 }}
+        placeholder={this.props.placeholder}
+        onChangeText={async text => {
+          await this.setState({ text: text });
+          this.props.onChange(
+            this.state.text,
+            this.props.period,
+            this.props.item
+          );
+        }}
+      >
+        {this.props.prefill}
+      </TextInput>
     );
   }
 }
@@ -77,23 +87,51 @@ export default class LinksScreen extends Component {
     });
 
     this.state = {
-      tableData: [
-        
-      ],
+      tableData: [],
       retrievedClassData: initialData,
-      initialData: initialData
+      newClassData: initialData
     };
   }
 
+  changeData = (text, period, item) => {
+    let newData = JSON.parse(this.state.newClassData);
+    newData[period][item] = text;
+
+    this.setState({
+      newClassData: JSON.stringify(newData)
+    });
+
+    console.log(this.state.newClassData);
+    console.log(newData);
+    console.log("end of changeData");
+  };
+
   makeTableRow = (period, data) => {
-    console.log("in makeTableRow")
     data = JSON.parse(data);
     let tableHead = ["Period", "Class", "Teacher", "Room"];
     return [
       period,
-      <Input placeholder={tableHead[1]} prefill={data[period].class} />,
-      <Input placeholder={tableHead[2]} prefill={data[period].teacher} />,
-      <Input placeholder={tableHead[3]} prefill={data[period].room} />
+      <Input
+        placeholder={tableHead[1]}
+        prefill={data[period].class}
+        onChange={this.changeData}
+        period={period}
+        item={"class"}
+      />,
+      <Input
+        placeholder={tableHead[2]}
+        prefill={data[period].teacher}
+        onChange={this.changeData}
+        period={period}
+        item={"teacher"}
+      />,
+      <Input
+        placeholder={tableHead[3]}
+        prefill={data[period].room}
+        onChange={this.changeData}
+        period={period}
+        item={"room"}
+      />
     ];
   };
 
@@ -120,69 +158,41 @@ export default class LinksScreen extends Component {
   };
 
   setTable = () => {
-    console.log("in setTable")
-    this.makeTableRow("1", this.state.retrievedClassData)
+    let tableData = [
+      this.makeTableRow("1", this.state.retrievedClassData),
+      this.makeTableRow("2", this.state.retrievedClassData),
+      this.makeTableRow("3", this.state.retrievedClassData),
+      this.makeTableRow("4", this.state.retrievedClassData),
+      this.makeTableRow("5", this.state.retrievedClassData),
+      this.makeTableRow("6", this.state.retrievedClassData),
+      this.makeTableRow("7", this.state.retrievedClassData)
+    ];
+
     this.setState({
-      tableData: [
-        this.makeTableRow("1", this.state.retrievedClassData),
-        // this.makeTableRow("2", this.state.retrievedClassData),
-        // this.makeTableRow("3", this.state.retrievedClassData),
-        // this.makeTableRow("4", this.state.retrievedClassData),
-        // this.makeTableRow("5", this.state.retrievedClassData),
-        // this.makeTableRow("6", this.state.retrievedClassData),
-        // this.makeTableRow("7", this.state.retrievedClassData)
-      ]
-    })
-  }
+      tableData: tableData
+    });
+  };
 
   componentDidMount = async () => {
-    let x = await this.retrieveData()
-    console.log("here")
-    this.setTable()
-  }
+    let x = await this.retrieveData();
+    let data = this.state.retrievedClassData;
+    this.setState({
+      newClassData: data
+    });
+    this.setTable();
+  };
+
+  saveNewData = async () => {
+    console.log("in saveNewData");
+    try {
+      await AsyncStorage.setItem("classData", this.state.newClassData);
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message);
+    }
+  };
 
   render() {
-    this.saveData(
-      JSON.stringify({
-        "1": {
-          class: "asdfasdf",
-          teacher: "",
-          room: "fff"
-        },
-        "2": {
-          class: "",
-          teacher: "",
-          room: ""
-        },
-        "3": {
-          class: "",
-          teacher: "",
-          room: ""
-        },
-        "4": {
-          class: "",
-          teacher: "",
-          room: ""
-        },
-        "5": {
-          class: "",
-          teacher: "",
-          room: ""
-        },
-        "6": {
-          class: "",
-          teacher: "",
-          room: ""
-        },
-        "7": {
-          class: "",
-          teacher: "",
-          room: ""
-        }
-      })
-    );
-    
-    
     return (
       <ScrollView style={styles.container}>
         <View style={styles.container}>
@@ -194,8 +204,8 @@ export default class LinksScreen extends Component {
             />
             <Rows data={this.state.tableData} textStyle={styles.text} />
           </Table>
+          <Button onPress={this.saveNewData} title="save" />
         </View>
-        
       </ScrollView>
     );
   }

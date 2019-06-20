@@ -13,8 +13,15 @@ import {
 } from "react-native";
 
 import { MonoText } from "../components/StyledText";
-// import Moment from 'moment';
-// import moment from 'moment';
+import {
+  Table,
+  TableWrapper,
+  Row,
+  Rows,
+  Col,
+  Cols,
+  Cell
+} from "react-native-table-component";
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -29,22 +36,22 @@ export default class HomeScreen extends Component {
           four: new Date(0, 0, 0, 11, 0),
           five: new Date(0, 0, 0, 11, 56),
           six: new Date(0, 0, 0, 12, 42),
-          seven: new Date(0, 0, 0, 1, 44),
-          end: new Date(0, 0, 0, 2, 40)
+          seven: new Date(0, 0, 0, 1, 44)
+          // end: new Date(0, 0, 0, 2, 40)
         },
         W: {
           two: new Date(0, 0, 0, 8, 10),
           four: new Date(0, 0, 0, 10, 8),
           five: new Date(0, 0, 0, 12, 2),
-          six: new Date(0, 0, 0, 12, 48),
-          end: new Date(0, 0, 0, 2, 40)
+          six: new Date(0, 0, 0, 12, 48)
+          // end: new Date(0, 0, 0, 2, 40)
         },
         R: {
           one: new Date(0, 0, 0, 8, 10),
           three: new Date(0, 0, 0, 10, 8),
           five: new Date(0, 0, 0, 12, 2),
-          seven: new Date(0, 0, 0, 12, 48),
-          end: new Date(0, 0, 0, 2, 40)
+          seven: new Date(0, 0, 0, 12, 48)
+          // end: new Date(0, 0, 0, 2, 40)
         }
       },
 
@@ -106,37 +113,15 @@ export default class HomeScreen extends Component {
       todayEnding = this.state.endingObject.MTF;
     }
 
-    let currentLowest;
-    let currentLowestPeriod;
-    let test;
-    let nextPeriod;
     let endingTime;
     for (time in todaySchedule) {
-      if (todaySchedule[time].toLocaleTimeString() < this.state.test2Time) {
+      if (todaySchedule[time].toLocaleTimeString() < this.state.curTime) {
         endingTime = todayEnding[time].toLocaleTimeString();
-
-        // test=time
       } else {
         currentLowest = todaySchedule[time].toLocaleTimeString();
         currentLowestPeriod = time;
         break;
       }
-    }
-    let displayPeriod;
-    if (currentLowestPeriod == "one") {
-      displayPeriod = "First";
-    } else if (currentLowestPeriod == "two") {
-      displayPeriod = "Second";
-    } else if (currentLowestPeriod == "three") {
-      displayPeriod = "Third";
-    } else if (currentLowestPeriod == "four") {
-      displayPeriod = "Fourth";
-    } else if (currentLowestPeriod == "five") {
-      displayPeriod = "Fifth";
-    } else if (currentLowestPeriod == "six") {
-      displayPeriod = "Sixth";
-    } else if (currentLowestPeriod == "seven") {
-      displayPeriod = "Seventh";
     }
 
     return (
@@ -148,9 +133,6 @@ export default class HomeScreen extends Component {
           </Text>
           <Text style={styles.contentText}>
             This period ends on {endingTime}
-          </Text>
-          <Text style={styles.contentText}>
-            {displayPeriod} period starts on {currentLowest}
           </Text>
         </View>
 
