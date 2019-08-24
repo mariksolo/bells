@@ -18,7 +18,12 @@ import {
   Cols,
   Cell
 } from "react-native-table-component";
-import t from 'tcomb-form-native';
+// import t from 'tcomb-form-native';
+import {
+  FormLabel,
+  FormInput,
+  FormValidationMessage
+} from "react-native-elements";
 
 class Input extends Component {
   constructor(props) {
@@ -208,7 +213,8 @@ export default class LinksScreen extends Component {
           <Button onPress={this.saveNewData} title="save" />
         </View>
 
-        
+        <FormLabel>Name</FormLabel>
+        <FormInput onChangeText={someFunction} />
       </ScrollView>
     );
   }

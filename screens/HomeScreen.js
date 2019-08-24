@@ -86,7 +86,7 @@ export default class HomeScreen extends Component {
     setInterval(() => {
       this.setState({
         //0, 0, 0, 12, 5
-        curTime: /*new Date().toLocaleTimeString()*/new Date().toLocaleTimeString(),
+        curTime: /*new Date().toLocaleTimeString()*/ new Date().toLocaleTimeString(),
         testTime: new Date(0, 0, 0, 15, 5).toLocaleTimeString(),
         test2Time: new Date(0, 0, 0, 12, 5).toLocaleTimeString(),
         displayDate: new Date().toDateString(),
@@ -104,8 +104,11 @@ export default class HomeScreen extends Component {
     let currentLowestPeriod;
     let periodEndText;
     let periodStartText;
-    
-    if (!(dayOfWeek in [6, 7]) && this.state.curTime <= new Date(0, 0, 0, 14, 40).toLocaleTimeString() ) {
+
+    if (
+      !(dayOfWeek in [6, 7]) &&
+      this.state.curTime <= new Date(0, 0, 0, 14, 40).toLocaleTimeString()
+    ) {
       if (dayOfWeek in [1, 2, 5]) {
         todaySchedule = this.state.scheduleObject.MTF;
         todayEnding = this.state.endingObject.MTF;
@@ -119,27 +122,25 @@ export default class HomeScreen extends Component {
         todaySchedule = this.state.scheduleObject.MTF;
         todayEnding = this.state.endingObject.MTF;
       }
-  
-      
+
       for (time in todaySchedule) {
-        
         if (todaySchedule[time].toLocaleTimeString() < this.state.curTime) {
           endingTime = todayEnding[time].toLocaleTimeString();
           periodEndText = "This period ends on " + endingTime;
         } else {
           currentLowest = todaySchedule[time].toLocaleTimeString();
-          
+
           currentLowestPeriod = time;
-          periodStartText = "Period " + currentLowestPeriod + " starts on " + currentLowest;
+          periodStartText =
+            "Period " + currentLowestPeriod + " starts on " + currentLowest;
           break;
         }
       }
     } else {
-      
       periodEndText = "School is out";
       periodStartText = "";
     }
-    
+
     console.log();
 
     return (
@@ -149,12 +150,8 @@ export default class HomeScreen extends Component {
           <Text style={styles.contentText}>
             Today is {this.state.displayDate}
           </Text>
-          <Text style={styles.contentText}>
-            {periodEndText}
-          </Text>
-          <Text style={styles.contentText}>
-            {periodStartText}
-            </Text>
+          <Text style={styles.contentText}>{periodEndText}</Text>
+          <Text style={styles.contentText}>{periodStartText}</Text>
         </View>
 
         <View style={styles.col}>
