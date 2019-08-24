@@ -36,7 +36,7 @@ export default class HomeScreen extends Component {
           four: new Date(0, 0, 0, 11, 0),
           five: new Date(0, 0, 0, 11, 56),
           six: new Date(0, 0, 0, 12, 42),
-          seven: new Date(0, 0, 0, 1, 44)
+          seven: new Date(0, 0, 0, 13, 44)
           // end: new Date(0, 0, 0, 2, 40)
         },
         W: {
@@ -69,13 +69,13 @@ export default class HomeScreen extends Component {
           two: new Date(0, 0, 0, 10, 1),
           four: new Date(0, 0, 0, 12, 2),
           five: new Date(0, 0, 0, 12, 42),
-          six: new Date(0, 0, 0, 2, 40)
+          six: new Date(0, 0, 0, 14, 40)
         },
         R: {
           two: new Date(0, 0, 0, 10, 1),
           four: new Date(0, 0, 0, 12, 2),
           five: new Date(0, 0, 0, 12, 42),
-          six: new Date(0, 0, 0, 2, 40)
+          six: new Date(0, 0, 0, 14, 40)
         }
       }
     };
@@ -85,7 +85,8 @@ export default class HomeScreen extends Component {
     let cT = new Date();
     setInterval(() => {
       this.setState({
-        curTime: new Date().toLocaleTimeString(),
+        //0, 0, 0, 12, 5
+        curTime: /*new Date().toLocaleTimeString()*/new Date().toLocaleTimeString(),
         testTime: new Date(0, 0, 0, 15, 5).toLocaleTimeString(),
         test2Time: new Date(0, 0, 0, 12, 5).toLocaleTimeString(),
         displayDate: new Date().toDateString(),
@@ -95,34 +96,51 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    let dayOfWeek = this.state.dayOfWeek;
     let todaySchedule;
     let todayEnding;
-    dayOfWeek = this.state.dayOfWeek;
-    if (dayOfWeek in [1, 2, 5]) {
-      todaySchedule = this.state.scheduleObject.MTF;
-      todayEnding = this.state.endingObject.MTF;
-    } else if (dayOfWeek === 3) {
-      todaySchedule = this.state.scheduleObject.W;
-      todayEnding = this.state.endingObject.W;
-    } else if (dayOfWeek === 5) {
-      todaySchedule = this.state.scheduleObject.F;
-      todayEnding = this.state.endingObject.F;
-    } else {
-      todaySchedule = this.state.scheduleObject.MTF;
-      todayEnding = this.state.endingObject.MTF;
-    }
-
+    let dayOfWeek = this.state.dayOfWeek;
     let endingTime;
-    for (time in todaySchedule) {
-      if (todaySchedule[time].toLocaleTimeString() < this.state.curTime) {
-        endingTime = todayEnding[time].toLocaleTimeString();
+    let currentLowest;
+    let currentLowestPeriod;
+    let periodEndText;
+    let periodStartText;
+    
+    if (!(dayOfWeek in [6, 7]) && this.state.curTime <= new Date(0, 0, 0, 14, 40).toLocaleTimeString() ) {
+      if (dayOfWeek in [1, 2, 5]) {
+        todaySchedule = this.state.scheduleObject.MTF;
+        todayEnding = this.state.endingObject.MTF;
+      } else if (dayOfWeek === 3) {
+        todaySchedule = this.state.scheduleObject.W;
+        todayEnding = this.state.endingObject.W;
+      } else if (dayOfWeek === 5) {
+        todaySchedule = this.state.scheduleObject.F;
+        todayEnding = this.state.endingObject.F;
       } else {
-        currentLowest = todaySchedule[time].toLocaleTimeString();
-        currentLowestPeriod = time;
-        break;
+        todaySchedule = this.state.scheduleObject.MTF;
+        todayEnding = this.state.endingObject.MTF;
       }
+  
+      
+      for (time in todaySchedule) {
+        
+        if (todaySchedule[time].toLocaleTimeString() < this.state.curTime) {
+          endingTime = todayEnding[time].toLocaleTimeString();
+          periodEndText = "This period ends on " + endingTime;
+        } else {
+          currentLowest = todaySchedule[time].toLocaleTimeString();
+          
+          currentLowestPeriod = time;
+          periodStartText = "Period " + currentLowestPeriod + " starts on " + currentLowest;
+          break;
+        }
+      }
+    } else {
+      
+      periodEndText = "School is out";
+      periodStartText = "";
     }
+    
+    console.log();
 
     return (
       <View style={styles.contentContainer}>
@@ -132,8 +150,11 @@ export default class HomeScreen extends Component {
             Today is {this.state.displayDate}
           </Text>
           <Text style={styles.contentText}>
-            This period ends on {endingTime}
+            {periodEndText}
           </Text>
+          <Text style={styles.contentText}>
+            {periodStartText}
+            </Text>
         </View>
 
         <View style={styles.col}>

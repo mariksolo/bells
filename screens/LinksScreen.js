@@ -18,6 +18,7 @@ import {
   Cols,
   Cell
 } from "react-native-table-component";
+import t from 'tcomb-form-native';
 
 class Input extends Component {
   constructor(props) {
@@ -206,6 +207,8 @@ export default class LinksScreen extends Component {
           </Table>
           <Button onPress={this.saveNewData} title="save" />
         </View>
+
+        
       </ScrollView>
     );
   }
