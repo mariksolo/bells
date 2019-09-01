@@ -1,4 +1,3 @@
-import * as WebBrowser from "expo-web-browser";
 import React, { Component } from "react";
 import {
   Image,
@@ -11,17 +10,6 @@ import {
   Button,
   TextInput
 } from "react-native";
-
-import { MonoText } from "../components/StyledText";
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-  Col,
-  Cols,
-  Cell
-} from "react-native-table-component";
 
 export default class HomeScreen extends Component {
   constructor(props) {
